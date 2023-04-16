@@ -130,10 +130,31 @@ public class HuffmanCoding {
 		/* TODO Construct Huffman Tree */
 		BTNode<Integer,String> rootNode = null;
 		
+		SortedList<BTNode<Integer, String>> sortedList = new  SortedLinkedList<BTNode<Integer, String>>();
+		
+	    for (String key : fD.getKeys()) {
+	        BTNode<Integer, String> node = new BTNode<>(fD.get(key), key);
+	        sortedList.add(node);
+	    }
+
+	    while (sortedList.size() > 1) {
+	        BTNode<Integer, String> leftNode = sortedList.get(0);
+	        sortedList.removeIndex(0);
+	        BTNode<Integer, String> rightNode = sortedList.get(0);
+	        sortedList.removeIndex(0);
+
+	        int combinedFrequency = leftNode.getKey() + rightNode.getKey();
+	        BTNode<Integer, String> newNode = new BTNode<>(combinedFrequency, leftNode.getValue() + rightNode.getValue());
+	        newNode.setLeftChild(leftNode);
+	        newNode.setRightChild(rightNode);
+
+	        sortedList.add(newNode);
+	    }
 		/* Use this method to see full Huffman Tree built with the generated root node
 		BinaryTreePrinter.print(rootNode); 
 		 */
-
+	    
+	    rootNode = sortedList.get(0);
 		return rootNode; //Dummy Return
 	}
 
@@ -145,7 +166,10 @@ public class HuffmanCoding {
 	 */
 	public static Map<String, String> huffman_code(BTNode<Integer,String> huffmanRoot) {
 		/* TODO Construct Prefix Codes */
-		return null; //Dummy Return
+		Map<String, String> encodingMap = new HashTableSC<String, String>();
+		recEncode(huffmanRoot, encodingMap, "");
+		
+		return encodingMap; //Dummy Return
 	}
 
 	/**
@@ -285,5 +309,19 @@ public class HuffmanCoding {
 			}
 		}
 		return result;    
+	}
+	
+	private static void recEncode(BTNode<Integer, String> node, Map<String, String> encodingMap, String code) {
+		
+		if(node != null) {
+			
+			if(node.getLeftChild() == null && node.getRightChild() == null)
+				encodingMap.put(node.getValue(), code);
+			else {
+				recEncode(node.getLeftChild(), encodingMap, code + "0");
+				recEncode(node.getRightChild(), encodingMap, code + "1");
+				
+			}
+		}
 	}
 }
