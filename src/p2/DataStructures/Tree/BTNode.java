@@ -12,7 +12,7 @@ import p2.Utils.BinaryTreePrinter.PrintableNode;
  * @param <K> Generic type for the key of the values to be stored in the nodes
  * @param <V> Generic type for the values to be stored in the nodes
  */
-public class BTNode<K extends Comparable<? super K>, V extends Comparable<? super V>> implements PrintableNode {
+public class BTNode<K extends Comparable<? super K>, V extends Comparable<? super V>> implements PrintableNode, Comparable<BTNode<K,V>> {
 	
 	private K key;
 	private V value;
@@ -23,6 +23,17 @@ public class BTNode<K extends Comparable<? super K>, V extends Comparable<? supe
 		this.value = value;
 		this.parent = parent;
 		this.leftChild = this.rightChild = null;
+	}
+	@Override
+	public int compareTo(BTNode<K, V> otherNode) {
+		// TODO Auto-generated method stub
+		
+		if(otherNode == null)
+			throw new IllegalArgumentException();
+		
+		K otherKey = otherNode.getKey();
+		
+		return this.key.compareTo(otherKey);
 	}
 	
 	public BTNode(K key, V value) {
@@ -97,6 +108,6 @@ public class BTNode<K extends Comparable<? super K>, V extends Comparable<? supe
 	public String getText() {
 		return key.toString() + ":" + value.toString();
 	}
-	
 
+	
 }

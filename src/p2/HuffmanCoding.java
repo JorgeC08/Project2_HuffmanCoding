@@ -27,7 +27,7 @@ import p2.DataStructures.Tree.BTNode;
  * of each string encoded a lot smaller, thus saving space.
  * 
  * @author Fernando J. Bermudez Medina (Template) 
- * @author ADD YOUR NAME HERE - ADD STUDENT ID HERE (Implementation)
+ * @author Jorge Colon Velez - 843-18-8733 (Implementation)
  * @version 3.0
  * @since 03/28/2023
  */
@@ -104,7 +104,19 @@ public class HuffmanCoding {
 	 */
 	public static Map<String, Integer> compute_fd(String inputString) {
 		/* TODO Compute Symbol Frequency Distribution of each character inside input string */
-		return null; //Dummy Return
+		Map<String, Integer> freq = new HashTableSC<String, Integer>();
+		
+		for(int i = 0; i < inputString.length(); i++) {
+			String c = Character.toString(inputString.charAt(i));
+			
+			if(!freq.containsKey(c))
+				freq.put(c, 1);
+			else {
+				int count = freq.get(c);
+				freq.put(c, count + 1);
+			}
+		}
+		return freq; //Dummy Return
 	}
 
 	/**
@@ -117,7 +129,7 @@ public class HuffmanCoding {
 
 		/* TODO Construct Huffman Tree */
 		BTNode<Integer,String> rootNode = null;
-
+		
 		/* Use this method to see full Huffman Tree built with the generated root node
 		BinaryTreePrinter.print(rootNode); 
 		 */

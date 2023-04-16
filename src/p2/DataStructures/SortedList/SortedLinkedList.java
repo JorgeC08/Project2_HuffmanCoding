@@ -1,9 +1,12 @@
 package p2.DataStructures.SortedList;
+
+import java.util.spi.CurrencyNameProvider;
+
 /**
  * Implementation of a Sorted List using a Singly Linked List structure
  * 
  * @author Fernando J. Bermudez - bermed28
- * @author ADD YOUR NAME HERE - ADD YOUR STUDENT ID HERE
+ * @author Jorge Colon Velez - 843-18-8733
  * @version 3.0
  * @since 03/28/2023
  * @param <E> 
@@ -64,37 +67,115 @@ public class SortedLinkedList<E extends Comparable<? super E>> extends AbstractS
 		/* TODO ADD CODE HERE */
 		/* Special case: Be careful when the new value is the smallest */
 		Node<E> newNode = new Node<>(e);
-		Node<E> curNode;
+		Node<E> curNode = head;
+		Node<E> prevNode = null;
+		
+		// Iterates trough the list to find where to add the node
+		while(curNode != null && e.compareTo(curNode.getValue()) > 0) {
+			prevNode = curNode;
+			curNode = curNode.getNext();
+		}
+		
+		newNode.setNext(curNode);
+		
+		// If the node to add will be the first, assing it to be the head
+		if(prevNode == null)
+			head = newNode;
+		else 
+			prevNode.setNext(newNode);
+		
+		currentSize++;
 	}
 
 	@Override
 	public boolean remove(E e) {
 		/* TODO ADD CODE HERE */
 		/* Special case: Be careful when the value is found at the head node */
-		Node<E> rmNode, curNode;
-		return false; //Dummy Return
+		Node<E> rmNode = null;
+		Node<E> curNode = head;
+		
+		// Find the node to be remove 
+		while(curNode != null && !curNode.getValue().equals(e)) {
+			rmNode = curNode;
+			curNode = curNode.getNext();
+		}
+		
+		// If the node to remove is not found, return false
+		if(curNode == null)
+			return false;
+		
+		// If the node to be remove is the head, assign it to the next node
+		if(rmNode == null)
+			head = curNode.getNext();
+		else
+			rmNode.setNext(curNode.getNext());
+		
+		curNode.clear();
+		currentSize--;
+		
+		return true; //Dummy Return
 	}
 
 	@Override
 	public E removeIndex(int index) {
 		/* TODO ADD CODE HERE */
 		/* Special case: Be careful when index = 0 */
-		Node<E> rmNode, curNode;
-		E value = null;
+		if(index < 0 || index >= currentSize)
+			throw new IndexOutOfBoundsException();
+		
+		Node<E> rmNode = null;
+		Node<E> curNode = head;
+		
+		for(int i = 0; i < index; i++) {
+			rmNode = curNode;
+			curNode = curNode.getNext();
+		}
+		
+		// If the node to remove is the head, assign it to the next node
+		if(rmNode == null)
+			head = curNode.getNext();
+		else
+			rmNode.setNext(curNode.getNext());
+		
+		
+		E value = curNode.getValue();
+		curNode.clear();
+		currentSize--;
+		
 		return value; //Dummy Return
 	}
 
 	@Override
 	public int firstIndex(E e) {
 		/* TODO ADD CODE HERE */
-		int target = -1;
-		return target; //Dummy Return
+		int counter = 0;
+		Node<E> curNode = head;
+		
+		// Iterates trough the list, when e is found returns
+		while(curNode != null) {
+			if(curNode.getValue().equals(e)) 
+				return counter;
+			
+			curNode = curNode.getNext();
+			counter++;
+		}
+		return -1;
 	}
 
 	@Override
 	public E get(int index) {
 		/* TODO ADD CODE HERE */
-		return null; //Dummy Return
+		if(index < 0 || index >= currentSize)
+			throw new IndexOutOfBoundsException();
+		
+		Node<E> curNode = head;
+		
+		// Iterates trough the list until the node at index is found
+		for(int i = 0; i < index; i++)
+			curNode = curNode.getNext();
+		
+		// Returns the value of the node at index
+		return curNode.getValue(); //Dummy Return
 	}
 
 	@SuppressWarnings("unchecked")
