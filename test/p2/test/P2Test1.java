@@ -78,8 +78,7 @@ public class P2Test1 {
 			BTNode<Integer,String> node = new BTNode<Integer,String>(fD.get(key),key);
 			sortedList.add(node);
 		}
-
-		
+				
 		int i = sortedList.size() - 1;
 		int j = 0;
 		while(i >= 0 && j < freq.length) {

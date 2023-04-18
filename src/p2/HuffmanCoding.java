@@ -181,7 +181,14 @@ public class HuffmanCoding {
 	 */
 	public static String encode(Map<String, String> encodingMap, String inputString) {
 		/* TODO Encode String */
-		return ""; //Dummy Return
+	    String output = ""; // Inicializamos una cadena vacía
+
+	    for (int i = 0; i < inputString.length(); i++) {
+	        String ch = Character.toString(inputString.charAt(i));
+	        String encodedChar = encodingMap.get(ch);
+	        output += encodedChar; // Concatenamos el caracter codificado a la cadena
+	    }
+	    return output; //Dummy Return
 	}
 
 	/**
