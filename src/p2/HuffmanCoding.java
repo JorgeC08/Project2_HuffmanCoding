@@ -7,12 +7,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 
+import p2.DataStructures.List.LinkedList;
 import p2.DataStructures.List.List;
 import p2.DataStructures.Map.HashTableSC;
 import p2.DataStructures.Map.Map;
 import p2.DataStructures.SortedList.SortedLinkedList;
 import p2.DataStructures.SortedList.SortedList;
 import p2.DataStructures.Tree.BTNode;
+import p2.Utils.BinaryTreePrinter;
 
 /**
  * The Huffman Encoding Algorithm
@@ -97,18 +99,24 @@ public class HuffmanCoding {
 	}
 
 	/**
-	 * TODO ADD DESCRIPTION OF WHAT THIS METHOD DOES HERE
+	 * Compute the frequency distribution (hence comoute_fd)
+	 * of each character in the input string
 	 * 
-	 * @param TODO ADD PARAMETER AND DESCRIPTION
-	 * @return TODO ADD RETURN AND DESCRIPTION
+	 * @param inputString The input string of the characters who's frequency need to be computed 
+	 * @return A map containing the frequency distribution of each character
 	 */
 	public static Map<String, Integer> compute_fd(String inputString) {
 		/* TODO Compute Symbol Frequency Distribution of each character inside input string */
+	
+		// Map where the frequency distribution will be saved
 		Map<String, Integer> freq = new HashTableSC<String, Integer>();
 		
+		// Iterates through inputString, converting it into individual characters 
 		for(int i = 0; i < inputString.length(); i++) {
 			String c = Character.toString(inputString.charAt(i));
 			
+			// Checking if the character c is a duplicate, if not add it to the map.
+			// If it's a duplicate increase the frequency count
 			if(!freq.containsKey(c))
 				freq.put(c, 1);
 			else {
@@ -116,79 +124,83 @@ public class HuffmanCoding {
 				freq.put(c, count + 1);
 			}
 		}
-		return freq; //Dummy Return
+		// Returns the map with all the frequencies
+		return freq; 
 	}
 
 	/**
-	 * TODO ADD DESCRIPTION OF WHAT THIS METHOD DOES HERE
+	 * Constructs the Huffman tree using the frequency distribution map 
+	 * obtained using compute_fd
 	 * 
-	 * @param TODO ADD PARAMETER AND DESCRIPTION
-	 * @return TODO ADD RETURN AND DESCRIPTION
+	 * @param fD Map containing the frequency distribution
+	 * @return The root node of the constructed Huffman tree
 	 */
 	public static BTNode<Integer, String> huffman_tree(Map<String, Integer> fD) {
 
 		/* TODO Construct Huffman Tree */
-		BTNode<Integer,String> rootNode = null;
 		
-		SortedList<BTNode<Integer, String>> sortedList = new  SortedLinkedList<BTNode<Integer, String>>();
-		
+		// Construct the list that would be the Huffman Tree
+	    SortedList<BTNode<Integer, String>> theForest = new SortedLinkedList<BTNode<Integer, String>>();
+	    
+	    // Iterates through fD adding each element to the list (that would be the huffman tree)
 	    for (String key : fD.getKeys()) {
-	        BTNode<Integer, String> node = new BTNode<>(fD.get(key), key);
-	        sortedList.add(node);
+	        BTNode<Integer, String> node = new BTNode<Integer, String>(fD.get(key), key);
+	        theForest.add(node);
 	    }
-
-	    while (sortedList.size() > 1) {
-	        BTNode<Integer, String> leftNode = sortedList.get(0);
-	        sortedList.removeIndex(0);
-	        BTNode<Integer, String> rightNode = sortedList.get(0);
-	        sortedList.removeIndex(0);
-
-	        int combinedFrequency = leftNode.getKey() + rightNode.getKey();
-	        BTNode<Integer, String> newNode = new BTNode<>(combinedFrequency, leftNode.getValue() + rightNode.getValue());
-	        newNode.setLeftChild(leftNode);
-	        newNode.setRightChild(rightNode);
-
-	        sortedList.add(newNode);
+	    // While there's more than one node in the list keep iterating 
+	    // and concatenating 
+	    while (theForest.size() > 1) {
+	        BTNode<Integer, String> node1 = theForest.get(0);
+	        theForest.removeIndex(0);
+	        BTNode<Integer, String> node2 = theForest.get(0);
+	        theForest.removeIndex(0);
+	        
+	        BTNode<Integer, String> newNode = new BTNode<Integer, String>(node1.getKey() + node2.getKey(), node1.getValue() + node2.getValue());
+	        newNode.setLeftChild(node1);
+	        newNode.setRightChild(node2);
+	        
+	        theForest.add(newNode);
 	    }
 		/* Use this method to see full Huffman Tree built with the generated root node
 		BinaryTreePrinter.print(rootNode); 
 		 */
-	    
-	    rootNode = sortedList.get(0);
-		return rootNode; //Dummy Return
+	    BinaryTreePrinter.print(theForest.get(0));
+	    return theForest.get(0);
 	}
 
 	/**
-	 * TODO ADD DESCRIPTION OF WHAT THIS METHOD DOES HERE
+	 * Constructs the Huffman code map using the Huffman Tree
 	 * 
-	 * @param ADD PARAMETER AND DESCRIPTION
-	 * @return ADD RETURN AND DESCRIPTION
+	 * @param huffmanRoot The root node of the Huffman Tree
+	 * @return A map containing the Huffman code for each character 
 	 */
 	public static Map<String, String> huffman_code(BTNode<Integer,String> huffmanRoot) {
 		/* TODO Construct Prefix Codes */
 		Map<String, String> encodingMap = new HashTableSC<String, String>();
 		recEncode(huffmanRoot, encodingMap, "");
 		
-		return encodingMap; //Dummy Return
+		return encodingMap; 
 	}
 
 	/**
-	 * TODO ADD DESCRIPTION OF WHAT THIS METHOD DOES HERE
+	 * Encodes the Huffman Tree using the Huffman code map
 	 * 
-	 * @param TODO ADD PARAMETER AND DESCRIPTION
-	 * @param TODO ADD PARAMETER AND DESCRIPTION
-	 * @return TODO ADD RETURN AND DESCRIPTION
+	 * @param encodingMap A map containing the Huffman prefix code for each character
+	 * @param inputString The input to be encoded
+	 * @return The encoded string using the Huffman prefix code
 	 */
 	public static String encode(Map<String, String> encodingMap, String inputString) {
 		/* TODO Encode String */
-	    String output = ""; // Inicializamos una cadena vacía
-
+	   // Initializing an empty string 
+		String output = ""; 
+		// Iterating the inputString to find the code and adding it to the output string 
 	    for (int i = 0; i < inputString.length(); i++) {
 	        String ch = Character.toString(inputString.charAt(i));
 	        String encodedChar = encodingMap.get(ch);
-	        output += encodedChar; // Concatenamos el caracter codificado a la cadena
+	     // Adding the encoded character to the string
+	        output += encodedChar; 
 	    }
-	    return output; //Dummy Return
+	    return output; 
 	}
 
 	/**
@@ -317,11 +329,20 @@ public class HuffmanCoding {
 		}
 		return result;    
 	}
-	
+
+	/**
+	 * Helper method to recursively traverse the Huffman tree and construct the
+	 * prefix code map.
+	 * 
+	 * @param node        The current node in the Huffman tree
+	 * @param encodingMap The map containing the Huffman prefix codes for each
+	 *                    character in the input string (to be filled)
+	 * @param code        The current code (prefix) while traversing the tree
+	 */
 	private static void recEncode(BTNode<Integer, String> node, Map<String, String> encodingMap, String code) {
 		
 		if(node != null) {
-			
+			// Creating the binary code
 			if(node.getLeftChild() == null && node.getRightChild() == null)
 				encodingMap.put(node.getValue(), code);
 			else {

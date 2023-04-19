@@ -27,11 +27,14 @@ public class BTNode<K extends Comparable<? super K>, V extends Comparable<? supe
 	@Override
 	public int compareTo(BTNode<K, V> otherNode) {
 		// TODO Auto-generated method stub
-		
+		// If the node to compare is null, return
 		if(otherNode == null)
 			throw new IllegalArgumentException();
 		
 		K otherKey = otherNode.getKey();
+		// If their the same return its value, if not return if its -1 or 1 (greater or less)
+		if(this.key.compareTo(otherKey) == 0)
+			return this.value.compareTo(otherNode.getValue());
 		
 		return this.key.compareTo(otherKey);
 	}

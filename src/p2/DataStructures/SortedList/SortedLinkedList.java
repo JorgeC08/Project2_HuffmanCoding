@@ -1,7 +1,5 @@
 package p2.DataStructures.SortedList;
 
-import java.util.spi.CurrencyNameProvider;
-
 /**
  * Implementation of a Sorted List using a Singly Linked List structure
  * 
@@ -61,33 +59,52 @@ public class SortedLinkedList<E extends Comparable<? super E>> extends AbstractS
 		head = null;
 		currentSize = 0;
 	}
-
+	
+	/**
+	 * Adds a new element to the list while maintaining its order
+	 *
+	 * @param e The element to be added
+	 */
 	@Override
 	public void add(E e) {
 		/* TODO ADD CODE HERE */
 		/* Special case: Be careful when the new value is the smallest */
 		Node<E> newNode = new Node<>(e);
-		Node<E> curNode = head;
-		Node<E> prevNode = null;
-		
-		// Iterates trough the list to find where to add the node
-		while(curNode != null && e.compareTo(curNode.getValue()) > 0) {
-			prevNode = curNode;
-			curNode = curNode.getNext();
-		}
-		
-		newNode.setNext(curNode);
-		
-		// If the node to add will be the first, assing it to be the head
-		if(prevNode == null)
+
+		// The list is empty
+		if (head == null) {
 			head = newNode;
-		else 
-			prevNode.setNext(newNode);
-		
+		}
+		// The new value is the smallest, insert before head
+		else if (head.getValue().compareTo(e) >= 0) {
+			newNode.setNext(head);
+			head = newNode;
+		}
+		// Insert in the middle or at the end of the list
+		else {
+			Node<E> curNode = head;
+
+			// Finding the node before the position where the new node would be inserted
+			while (curNode.getNext() != null && e.compareTo(curNode.getNext().getValue()) >= 0) {
+				curNode = curNode.getNext();
+			}
+
+			// Insert the new node after curNode
+			newNode.setNext(curNode.getNext());
+			curNode.setNext(newNode);
+		}
+
 		currentSize++;
 	}
 
 	@Override
+	/**
+	 * Removes the first occurrence of the element e from the list if found.
+	 * If not, the list stays the same
+	 *
+	 * @param e the element to be removed 
+	 * @return true if e is found, false otherwise
+	 */
 	public boolean remove(E e) {
 		/* TODO ADD CODE HERE */
 		/* Special case: Be careful when the value is found at the head node */
@@ -110,13 +127,23 @@ public class SortedLinkedList<E extends Comparable<? super E>> extends AbstractS
 		else
 			rmNode.setNext(curNode.getNext());
 		
+		// Removing the node
 		curNode.clear();
 		currentSize--;
 		
-		return true; //Dummy Return
+		return true; 
 	}
 
 	@Override
+
+	/**
+	 * Removes the element at the specified position in the list and returns
+	 * the value of the removed element.
+	 *
+	 * @param index the position of the element to be removed
+	 * @return the removed element
+	 * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= currentSize)
+	 */
 	public E removeIndex(int index) {
 		/* TODO ADD CODE HERE */
 		/* Special case: Be careful when index = 0 */
@@ -126,6 +153,7 @@ public class SortedLinkedList<E extends Comparable<? super E>> extends AbstractS
 		Node<E> rmNode = null;
 		Node<E> curNode = head;
 		
+		// Iterates through the list until the position at index
 		for(int i = 0; i < index; i++) {
 			rmNode = curNode;
 			curNode = curNode.getNext();
@@ -137,21 +165,30 @@ public class SortedLinkedList<E extends Comparable<? super E>> extends AbstractS
 		else
 			rmNode.setNext(curNode.getNext());
 		
-		
+		// Saving the value to return it before it gets removed
 		E value = curNode.getValue();
+		// Removing the node
 		curNode.clear();
 		currentSize--;
 		
-		return value; //Dummy Return
+		return value; 
 	}
 
 	@Override
+	/**
+	 * Returns the index of the first occurrence of the specified element in this list,
+	 * or -1 if this list does not contain the element.
+	 *
+	 * @param e the element to search for
+	 * @return the index of the first occurrence of the specified element in this list,
+	 *         or -1 if this list does not contain the element
+	 */
 	public int firstIndex(E e) {
 		/* TODO ADD CODE HERE */
 		int counter = 0;
 		Node<E> curNode = head;
 		
-		// Iterates trough the list, when e is found returns
+		// Iterates trough the list, when e is found returns where it was
 		while(curNode != null) {
 			if(curNode.getValue().equals(e)) 
 				return counter;
@@ -159,9 +196,16 @@ public class SortedLinkedList<E extends Comparable<? super E>> extends AbstractS
 			curNode = curNode.getNext();
 			counter++;
 		}
+		// If not found return -1
 		return -1;
 	}
-
+	/**
+	 * Returns the element at the specified position in this list.
+	 *
+	 * @param index the position of the element to return
+	 * @return the element at the specified position in this list
+	 * @throws IndexOutOfBoundsException if the index is out of range (index < 0 || index >= currentSize)
+	 */
 	@Override
 	public E get(int index) {
 		/* TODO ADD CODE HERE */
@@ -175,7 +219,7 @@ public class SortedLinkedList<E extends Comparable<? super E>> extends AbstractS
 			curNode = curNode.getNext();
 		
 		// Returns the value of the node at index
-		return curNode.getValue(); //Dummy Return
+		return curNode.getValue();
 	}
 
 	@SuppressWarnings("unchecked")
