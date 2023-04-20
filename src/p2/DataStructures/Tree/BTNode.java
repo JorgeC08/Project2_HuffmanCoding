@@ -24,6 +24,12 @@ public class BTNode<K extends Comparable<? super K>, V extends Comparable<? supe
 		this.parent = parent;
 		this.leftChild = this.rightChild = null;
 	}
+	/**
+	 * Take the given node and compare it to the original,
+	 * 
+	 * @param otherNode Node to compare 
+	 * @return	If it's greater than, equal or less than | 1, 0, -1 respectively
+	 */
 	@Override
 	public int compareTo(BTNode<K, V> otherNode) {
 		// TODO Auto-generated method stub
@@ -32,7 +38,7 @@ public class BTNode<K extends Comparable<? super K>, V extends Comparable<? supe
 			throw new IllegalArgumentException();
 		
 		K otherKey = otherNode.getKey();
-		// If their the same return its value, if not return if its -1 or 1 (greater or less)
+		// If they are the same return its value, if not return if its -1 or 1 (greater or less)
 		if(this.key.compareTo(otherKey) == 0)
 			return this.value.compareTo(otherNode.getValue());
 		
