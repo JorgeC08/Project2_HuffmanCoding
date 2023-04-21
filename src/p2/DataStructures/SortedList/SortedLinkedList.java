@@ -71,7 +71,7 @@ public class SortedLinkedList<E extends Comparable<? super E>> extends AbstractS
 		/* Special case: Be careful when the new value is the smallest */
 		Node<E> newNode = new Node<>(e);
 
-		// The list is empty
+		// Check if the list is empty
 		if (head == null) {
 			head = newNode;
 		}
